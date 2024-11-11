@@ -88,6 +88,7 @@ const Index = () => {
                 <Button 
                   className="w-full bg-success hover:bg-success/90"
                   disabled={loading}
+                  onClick={createInstance}
                 >
                   Criar agora
                 </Button>
