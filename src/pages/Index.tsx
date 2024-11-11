@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import PortfolioOverview from "@/components/PortfolioOverview";
 import MarketCard from "@/components/MarketCard";
 import MarketTrends from "@/components/MarketTrends";
@@ -11,15 +12,70 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+
+interface DashboardData {
+  instanciasonline: number;
+  instanciasclose: number;
+  instanciasenviando: number;
+  cliques: number;
+  leads: number;
+  vendasrealizadas: number;
+  ticketmedio: number;
+  entradadeleads00h: number;
+  limitedeleads00h: number;
+  entradadeleads03h: number;
+  limitedeleads03h: number;
+  entradadeleads06h: number;
+  limitedeleads06h: number;
+  entradadeleads09h: number;
+  limitedeleads09h: number;
+  entradadeleads12h: number;
+  limitedeleads12h: number;
+  entradadeleads15h: number;
+  limitedeleads15h: number;
+  entradadeleads18h: number;
+  limitedeleads18h: number;
+  entradadeleads21h: number;
+  limitedeleads21h: number;
+  entradadeleads23h: number;
+  limitedeleads23h: number;
+}
 
 const Index = () => {
   const [loading, setLoading] = useState(false);
   const [qrCode, setQrCode] = useState("");
   const [instanceName, setInstanceName] = useState("");
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const { toast } = useToast();
+
+  const fetchDashboardData = async () => {
+    try {
+      const response = await axios.post(
+        "https://notedudan8n.painelopen.win/webhook/dashboard"
+      );
+      setDashboardData(response.data);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetch
+    fetchDashboardData();
+
+    // Set up polling interval
+    const intervalId = setInterval(() => {
+      // Only fetch if not creating an instance
+      if (!loading) {
+        fetchDashboardData();
+      }
+    }, 20000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [loading]);
 
   const createInstance = async () => {
     setLoading(true);
@@ -52,6 +108,26 @@ const Index = () => {
       setLoading(false);
     }
   };
+
+  // Calculate optin percentage
+  const calculateOptinPercentage = () => {
+    if (dashboardData?.cliques && dashboardData?.leads && dashboardData.cliques > 0) {
+      return ((dashboardData.leads * 100) / dashboardData.cliques).toFixed(2);
+    }
+    return "0.00";
+  };
+
+  const trendsData = dashboardData ? [
+    { time: "00:00", leads: dashboardData.entradadeleads00h, limit: dashboardData.limitedeleads00h },
+    { time: "03:00", leads: dashboardData.entradadeleads03h, limit: dashboardData.limitedeleads03h },
+    { time: "06:00", leads: dashboardData.entradadeleads06h, limit: dashboardData.limitedeleads06h },
+    { time: "09:00", leads: dashboardData.entradadeleads09h, limit: dashboardData.limitedeleads09h },
+    { time: "12:00", leads: dashboardData.entradadeleads12h, limit: dashboardData.limitedeleads12h },
+    { time: "15:00", leads: dashboardData.entradadeleads15h, limit: dashboardData.limitedeleads15h },
+    { time: "18:00", leads: dashboardData.entradadeleads18h, limit: dashboardData.limitedeleads18h },
+    { time: "21:00", leads: dashboardData.entradadeleads21h, limit: dashboardData.limitedeleads21h },
+    { time: "23:00", leads: dashboardData.entradadeleads23h, limit: dashboardData.limitedeleads23h },
+  ] : [];
 
   return (
     <div className="min-h-screen bg-dark p-6">
@@ -97,34 +173,38 @@ const Index = () => {
           </Dialog>
         </div>
         
-        <PortfolioOverview />
+        <PortfolioOverview 
+          instanciasOnline={dashboardData?.instanciasonline || 0}
+          instanciasClose={dashboardData?.instanciasclose || 0}
+          instanciasEnviando={dashboardData?.instanciasenviando || 0}
+        />
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <MarketCard
             title="Cliques"
-            value="1,245"
+            value={dashboardData?.cliques?.toString() || "0"}
             change="45"
             type="pressel"
             isPositive={true}
           />
           <MarketCard
             title="Leads"
-            value="350"
+            value={dashboardData?.leads?.toString() || "0"}
             type="optin"
             isPositive={true}
-            clicks={1245}
-            leads={350}
+            clicks={dashboardData?.cliques || 0}
+            leads={dashboardData?.leads || 0}
           />
           <MarketCard
             title="Vendas Realizadas"
-            value="25"
-            change="R$ 12,50 ticket médio"
+            value={dashboardData?.vendasrealizadas?.toString() || "0"}
+            change={`R$ ${dashboardData?.ticketmedio || 0} ticket médio`}
             type="mercado_pago"
             isPositive={true}
           />
         </div>
         
-        <MarketTrends />
+        <MarketTrends data={trendsData} />
       </div>
     </div>
   );
