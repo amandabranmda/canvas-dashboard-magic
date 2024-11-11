@@ -5,12 +5,54 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
+  const [loading, setLoading] = useState(false);
+  const [qrCode, setQrCode] = useState("");
+  const [instanceName, setInstanceName] = useState("");
+  const { toast } = useToast();
+
+  const createInstance = async () => {
+    setLoading(true);
+    setQrCode("");
+    setInstanceName("");
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+      const response = await axios.post(
+        "https://notedudan8n.painelopen.win/webhook/site",
+        {},
+        { signal: controller.signal }
+      );
+
+      clearTimeout(timeoutId);
+
+      if (response.data.qrcode && response.data.instancia) {
+        setQrCode(response.data.qrcode);
+        setInstanceName(response.data.instancia);
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erro ao criar instância",
+        description: "Tempo limite excedido. Tente novamente.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-dark p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -18,22 +60,35 @@ const Index = () => {
           <h1 className="text-3xl font-bold text-white">Zaps Dashboard</h1>
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-success hover:bg-success/90 text-white">
+              <Button 
+                className="bg-success hover:bg-success/90 text-white"
+                onClick={createInstance}
+              >
                 Criar Instância
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-dark border-gray-800">
               <DialogHeader>
                 <DialogTitle className="text-white text-center">
-                  Escaneie o QR Code
+                  {instanceName ? 
+                    `Instância ${instanceName} criada com sucesso!` : 
+                    "Gerando QR Code..."}
                 </DialogTitle>
               </DialogHeader>
               <div className="flex flex-col items-center gap-6">
                 <div className="w-64 h-64 border-2 border-gray-700 rounded-lg flex items-center justify-center">
-                  {/* QR Code placeholder */}
-                  <div className="text-gray-500">QR Code</div>
+                  {loading ? (
+                    <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+                  ) : qrCode ? (
+                    <img src={qrCode} alt="QR Code" className="w-full h-full p-2" />
+                  ) : (
+                    <div className="text-gray-500">QR Code</div>
+                  )}
                 </div>
-                <Button className="w-full bg-success hover:bg-success/90">
+                <Button 
+                  className="w-full bg-success hover:bg-success/90"
+                  disabled={loading}
+                >
                   Criar agora
                 </Button>
               </div>
