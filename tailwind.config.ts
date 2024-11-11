@@ -57,6 +57,8 @@ export default {
         forex: "#3B82F6",
         stock: "#22C55E",
         intraday: "#8B5CF6",
+        dark: "#111827",
+        "dark-card": "#1F2937",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -4,9 +4,14 @@ import MarketTrends from "@/components/MarketTrends";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-dark p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold">Trading Dashboard</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-white">Trading Dashboard</h1>
+          <button className="bg-success hover:bg-success/90 text-white px-4 py-2 rounded-md flex items-center gap-2">
+            <span className="text-sm font-medium">New Instance</span>
+          </button>
+        </div>
         
         <PortfolioOverview />
         
