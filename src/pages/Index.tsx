@@ -20,13 +20,13 @@ const Index = () => {
             title="Cliques"
             value="1,245"
             change="45"
-            type="intraday"
+            type="pressel"
             isPositive={true}
           />
           <MarketCard
             title="Leads"
             value="350"
-            type="stock"
+            type="optin"
             isPositive={true}
             clicks={1245}
             leads={350}
@@ -35,7 +35,7 @@ const Index = () => {
             title="Vendas Realizadas"
             value="25"
             change="R$ 12,50 ticket médio"
-            type="forex"
+            type="mercado_pago"
             isPositive={true}
           />
         </div>

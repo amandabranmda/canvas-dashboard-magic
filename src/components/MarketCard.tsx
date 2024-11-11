@@ -6,7 +6,7 @@ interface MarketCardProps {
   title: string;
   value: string;
   change?: string;
-  type: "forex" | "stock" | "intraday";
+  type: "mercado_pago" | "optin" | "pressel";
   isPositive: boolean;
   clicks?: number;
   leads?: number;
@@ -23,11 +23,11 @@ const MarketCard = ({
 }: MarketCardProps) => {
   const getBadgeColor = () => {
     switch (type) {
-      case "forex":
+      case "mercado_pago":
         return "bg-blue-500/10 text-forex";
-      case "stock":
+      case "optin":
         return "bg-green-500/10 text-stock";
-      case "intraday":
+      case "pressel":
         return "bg-purple-500/10 text-intraday";
     }
   };
@@ -40,12 +40,23 @@ const MarketCard = ({
     return change;
   };
 
+  const getDisplayType = () => {
+    switch (type) {
+      case "mercado_pago":
+        return "MERCADO PAGO";
+      case "optin":
+        return "OPTIN";
+      case "pressel":
+        return "PRESSEL";
+    }
+  };
+
   return (
     <Card className="p-6 bg-dark-card border-gray-800">
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-lg font-semibold text-white">{title}</h3>
         <Badge variant="secondary" className={getBadgeColor()}>
-          {type.toUpperCase()}
+          {getDisplayType()}
         </Badge>
       </div>
       <div className="space-y-2">
