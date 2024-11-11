@@ -5,12 +5,22 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 interface MarketCardProps {
   title: string;
   value: string;
-  change: string;
+  change?: string;
   type: "forex" | "stock" | "intraday";
   isPositive: boolean;
+  clicks?: number;
+  leads?: number;
 }
 
-const MarketCard = ({ title, value, change, type, isPositive }: MarketCardProps) => {
+const MarketCard = ({ 
+  title, 
+  value, 
+  change, 
+  type, 
+  isPositive,
+  clicks,
+  leads 
+}: MarketCardProps) => {
   const getBadgeColor = () => {
     switch (type) {
       case "forex":
@@ -20,6 +30,14 @@ const MarketCard = ({ title, value, change, type, isPositive }: MarketCardProps)
       case "intraday":
         return "bg-purple-500/10 text-intraday";
     }
+  };
+
+  const calculateOptinPercentage = () => {
+    if (clicks && leads && clicks > 0) {
+      const percentage = (leads * 100) / clicks;
+      return `${percentage.toFixed(2)}% optin`;
+    }
+    return change;
   };
 
   return (
@@ -39,7 +57,7 @@ const MarketCard = ({ title, value, change, type, isPositive }: MarketCardProps)
             <ArrowDown className="w-4 h-4 text-danger" />
           )}
           <span className={isPositive ? "text-success" : "text-danger"}>
-            {change}
+            {title === "Leads" ? calculateOptinPercentage() : change}
           </span>
         </div>
       </div>

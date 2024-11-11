@@ -26,9 +26,10 @@ const Index = () => {
           <MarketCard
             title="Leads"
             value="350"
-            change="32"
             type="stock"
             isPositive={true}
+            clicks={1245}
+            leads={350}
           />
           <MarketCard
             title="Vendas Realizadas"
