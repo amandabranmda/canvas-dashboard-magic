@@ -34,7 +34,7 @@ const Index = () => {
           <MarketCard
             title="Vendas Realizadas"
             value="25"
-            change="12"
+            change="R$ 12,50 ticket médio"
             type="forex"
             isPositive={true}
           />
