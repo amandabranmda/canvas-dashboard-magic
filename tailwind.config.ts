@@ -52,6 +52,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: "#22C55E",
+        danger: "#EF4444",
+        forex: "#3B82F6",
+        stock: "#22C55E",
+        intraday: "#8B5CF6",
       },
       borderRadius: {
         lg: "var(--radius)",
