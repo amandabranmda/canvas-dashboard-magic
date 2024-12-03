@@ -71,7 +71,7 @@ const Index = () => {
       if (!loading) {
         fetchDashboardData();
       }
-    }, 20000);
+    }, 60000); // Changed from 20000 to 60000 (60 seconds)
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
