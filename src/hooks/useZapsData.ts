@@ -1,7 +1,40 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const useZapsData = () => {
+  const [data, setData] = useState({
+    instanciasOnline: 0,
+    instanciasClose: 0,
+    instanciasEnviando: 0
+  });
+
+  useEffect(() => {
+    // Initial fetch
+    fetchZapsData();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('zaps_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'zaps'
+        },
+        () => {
+          // When any change happens, refetch the counts
+          fetchZapsData();
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const fetchZapsData = async () => {
     const [onlineResult, closeResult, sendingResult] = await Promise.all([
       // Get online instances (status = 'open')
@@ -24,16 +57,12 @@ export const useZapsData = () => {
         .eq('aquecimento', 'enviando')
     ]);
 
-    return {
+    setData({
       instanciasOnline: onlineResult.count || 0,
       instanciasClose: closeResult.count || 0,
       instanciasEnviando: sendingResult.count || 0
-    };
+    });
   };
 
-  return useQuery({
-    queryKey: ['zaps-data'],
-    queryFn: fetchZapsData,
-    refetchInterval: 20000, // Refetch every 20 seconds
-  });
+  return { data };
 };

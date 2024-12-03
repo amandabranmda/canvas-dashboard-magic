@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import PortfolioOverview from "@/components/PortfolioOverview";
 import MarketCard from "@/components/MarketCard";
 import MarketTrends from "@/components/MarketTrends";
@@ -17,9 +17,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useZapsData } from "@/hooks/useZapsData";
 
 interface DashboardData {
-  instanciasonline: number;
-  instanciasclose: number;
-  instanciasenviando: number;
   cliques: number;
   leads: number;
   vendasrealizadas: number;
@@ -109,14 +106,6 @@ const Index = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Calculate optin percentage
-  const calculateOptinPercentage = () => {
-    if (dashboardData?.cliques && dashboardData?.leads && dashboardData.cliques > 0) {
-      return ((dashboardData.leads * 100) / dashboardData.cliques).toFixed(2);
-    }
-    return "0.00";
   };
 
   const trendsData = dashboardData ? [
