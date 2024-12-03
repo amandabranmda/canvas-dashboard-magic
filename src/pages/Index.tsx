@@ -196,7 +196,7 @@ const Index = () => {
             leads={dashboardData?.leads || 0}
           />
           <MarketCard
-            title="Vendas Realizadas"
+            title="Instâncias Criadas"
             value={dashboardData?.vendasrealizadas?.toString() || "0"}
             change={`R$ ${dashboardData?.ticketmedio || 0} ticket médio`}
             type="mercado_pago"

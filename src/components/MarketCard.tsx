@@ -43,7 +43,7 @@ const MarketCard = ({
   const getDisplayType = () => {
     switch (type) {
       case "mercado_pago":
-        return "MERCADO PAGO";
+        return "HOJE";
       case "optin":
         return "OPTIN";
       case "pressel":
