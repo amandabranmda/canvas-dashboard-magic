@@ -198,7 +198,7 @@ const Index = () => {
           <MarketCard
             title="Instâncias Criadas"
             value={dashboardData?.vendasrealizadas?.toString() || "0"}
-            change={`R$ ${dashboardData?.ticketmedio || 0} ticket médio`}
+            change="Nas últimas 24 horas"
             type="mercado_pago"
             isPositive={true}
           />
