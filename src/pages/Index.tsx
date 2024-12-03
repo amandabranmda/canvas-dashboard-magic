@@ -14,6 +14,7 @@ import {
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import { useZapsData } from "@/hooks/useZapsData";
 
 interface DashboardData {
   instanciasonline: number;
@@ -49,6 +50,7 @@ const Index = () => {
   const [instanceName, setInstanceName] = useState("");
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const { toast } = useToast();
+  const { data: zapsData } = useZapsData();
 
   const fetchDashboardData = async () => {
     try {
@@ -174,9 +176,9 @@ const Index = () => {
         </div>
         
         <PortfolioOverview 
-          instanciasOnline={dashboardData?.instanciasonline || 0}
-          instanciasClose={dashboardData?.instanciasclose || 0}
-          instanciasEnviando={dashboardData?.instanciasenviando || 0}
+          instanciasOnline={zapsData?.instanciasOnline || 0}
+          instanciasClose={zapsData?.instanciasClose || 0}
+          instanciasEnviando={zapsData?.instanciasEnviando || 0}
         />
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
