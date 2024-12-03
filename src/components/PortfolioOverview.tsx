@@ -39,7 +39,7 @@ const PortfolioOverview = ({
             <Send className="w-6 h-6 text-intraday" />
           </div>
           <div>
-            <p className="text-sm text-gray-400">Instâncias Enviando</p>
+            <p className="text-sm text-gray-400">Instâncias Disponíveis</p>
             <p className="text-xl font-bold text-white">{instanciasEnviando}</p>
           </div>
         </div>
