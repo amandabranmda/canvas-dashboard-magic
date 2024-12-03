@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import PortfolioOverview from "@/components/PortfolioOverview";
 import MarketCard from "@/components/MarketCard";
 import MarketTrends from "@/components/MarketTrends";
@@ -14,9 +14,11 @@ import {
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { useZapsData } from "@/hooks/useZapsData";
 
 interface DashboardData {
+  instanciasonline: number;
+  instanciasclose: number;
+  instanciasenviando: number;
   cliques: number;
   leads: number;
   vendasrealizadas: number;
@@ -47,7 +49,6 @@ const Index = () => {
   const [instanceName, setInstanceName] = useState("");
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const { toast } = useToast();
-  const { data: zapsData } = useZapsData();
 
   const fetchDashboardData = async () => {
     try {
@@ -108,6 +109,14 @@ const Index = () => {
     }
   };
 
+  // Calculate optin percentage
+  const calculateOptinPercentage = () => {
+    if (dashboardData?.cliques && dashboardData?.leads && dashboardData.cliques > 0) {
+      return ((dashboardData.leads * 100) / dashboardData.cliques).toFixed(2);
+    }
+    return "0.00";
+  };
+
   const trendsData = dashboardData ? [
     { time: "00:00", leads: dashboardData.entradadeleads00h, limit: dashboardData.limitedeleads00h },
     { time: "03:00", leads: dashboardData.entradadeleads03h, limit: dashboardData.limitedeleads03h },
@@ -165,9 +174,9 @@ const Index = () => {
         </div>
         
         <PortfolioOverview 
-          instanciasOnline={zapsData?.instanciasOnline || 0}
-          instanciasClose={zapsData?.instanciasClose || 0}
-          instanciasEnviando={zapsData?.instanciasEnviando || 0}
+          instanciasOnline={dashboardData?.instanciasonline || 0}
+          instanciasClose={dashboardData?.instanciasclose || 0}
+          instanciasEnviando={dashboardData?.instanciasenviando || 0}
         />
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
