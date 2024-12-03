@@ -53,7 +53,7 @@ const Index = () => {
   const fetchDashboardData = async () => {
     try {
       const response = await axios.post(
-        "https://notedudan8n.painelopen.win/webhook/dashboard"
+        "https://n8npc.painelopen.win/webhook/dashboardzaps"
       );
       setDashboardData(response.data);
     } catch (error) {
