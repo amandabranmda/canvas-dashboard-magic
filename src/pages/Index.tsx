@@ -87,7 +87,7 @@ const Index = () => {
       const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       const response = await axios.post(
-        "https://n8npc.painelopen.win/webhook/site",
+        "https://webhook.zapsafe.work/webhook/criacaozap",
         {},
         { signal: controller.signal }
       );
